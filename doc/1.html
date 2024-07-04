@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function* rootSaga() {
+				console.log('start')
+				yield { type: 'PUT', action: { type: 'ADD' } }
+				yield new Promise((resolve, reject) => {
+					setTimeout(() => {
+						resolve()
+					}, 2000)
+				})
+				yield { type: 'PUT', action: { type: 'MINUS' } }
+			}
+			function runSaga(saga) {
+				// 执行生成器 返回迭代器
+				const it = saga()
+
+				function next() {
+					const { done, value: effect } = it.next()
+					if (!done) {
+						// done 为false 说明没有完成
+						if (effect.type === 'PUT') {
+							console.log('派发一个动作')
+							next()
+						} else if (effect instanceof Promise) {
+							effect.then(next())
+						} else {
+							next()
+						}
+					}
+				}
+				next()
+			}
+
+			runSaga(rootSaga)
+		</script>
+	</body>
+</html>
