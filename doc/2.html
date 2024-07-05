@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+		// 异步处理的两种方式 promise 或者是回调函数
+		function * gen() {
+			console.log(999)
+			yield 1
+			console.log(888)
+			yield 2
+			yield 3
+			yield fn
+		}
+
+		function fn(call1) {
+			setTimeout(() => {
+				call1()
+			}, 2000)
+		}
+
+		let it = gen()
+		const res1 = it.next()
+		console.log(res1)
+		const res2 = it.next()
+		console.log(res2)
+		// 提前结束
+		// it.return("直接结束")
+		it.throw("直接结束,抛出异常")
+		const res3 = it.next()
+		console.log(res3)
+		const res4 = it.next()
+		console.log(res4)
+	</script>
+</body>
+</html>

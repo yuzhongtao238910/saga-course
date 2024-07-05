@@ -16,6 +16,14 @@
 					}, 2000)
 				})
 				yield { type: 'PUT', action: { type: 'MINUS' } }
+				yield fn
+				yield "delay1000"
+			}
+			function fn(callback) {
+				setTimeout(() => {
+					callback()
+					console.log(11)
+				}, 2000)
 			}
 			function runSaga(saga) {
 				// 执行生成器 返回迭代器
@@ -24,12 +32,21 @@
 				function next() {
 					const { done, value: effect } = it.next()
 					if (!done) {
+						if (effect === 'delay1000') {
+							setTimeout(() => {
+								console.log(999)
+								next()
+							}, 1000)
+						}
+						else if (typeof effect === 'function') {
+							effect(next)
+						}
 						// done 为false 说明没有完成
-						if (effect.type === 'PUT') {
+						else if (effect.type === 'PUT') {
 							console.log('派发一个动作')
 							next()
 						} else if (effect instanceof Promise) {
-							effect.then(next())
+							effect.then(next)
 						} else {
 							next()
 						}
