@@ -9,3 +9,10 @@ export function put(action) {
 		action,
 	}
 }
+// 不是开启一个新的子进程，而是从头的runSaga
+export function fork(saga) {
+	return {
+		type: effectTypes.FORK,
+		saga,
+	}
+}

@@ -26,6 +26,16 @@ function Counter() {
 			>
 				按钮- 异步
 			</button>
+			<hr />
+			<button
+				onClick={() => {
+					dispatch({
+						type: types.ASYNC_MINUS,
+					})
+				}}
+			>
+				按钮- 异步
+			</button>
 		</div>
 	)
 }
