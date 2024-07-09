@@ -36,6 +36,17 @@ function Counter() {
 			>
 				按钮- 异步
 			</button>
+
+			<hr />
+			<button
+				onClick={() => {
+					dispatch({
+						type: types.STOP_ADD,
+					})
+				}}
+			>
+				按钮- 取消
+			</button>
 		</div>
 	)
 }
