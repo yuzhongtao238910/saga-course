@@ -60,3 +60,28 @@ const delayFn = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
 export function delay(...args) {
 	return call(delayFn, ...args)
 }
+
+
+
+
+export function takeLatest(actionType, saga) {  
+    let lastTask;  
+  
+    // 定义一个帮助函数来执行逻辑  
+    function* takeLatestHelper() {  
+        while (true) {  
+            const action = yield take(actionType); // 等待 action  
+  
+            if (lastTask) {  
+                // 如果有上一个任务，则取消它  
+                yield cancel(lastTask);  
+            }  
+  
+            // 启动新的任务  
+            lastTask = yield fork(saga, action);  
+        }  
+    }  
+  
+    // 返回一个 fork 调用，启动 takeLatestHelper  
+    return fork(takeLatestHelper);  
+}  
